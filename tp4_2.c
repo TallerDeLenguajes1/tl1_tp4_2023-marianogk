@@ -10,6 +10,7 @@ struct
 } typedef Tarea;
 
 void ToDo();
+Tarea BuscarTarea(Tarea tarea[], int cant);
 
 int main()
 {
@@ -94,11 +95,40 @@ void ToDo()
             printf("\nDuracion: %d", TareasPendientes[i]->Duracion);
         }
     }
+
+    // Buscar Tarea
+
+    BuscarTarea(*arreglo,cant);
+
+    // Liberar memoria
+
+    for (int i = 0; i < cant; i++)
+    {
+        free(arreglo[i]);
+        free(TareasPendientes[i]);
+        free(TareasRealizadas[i]);
+    }
+    free(arreglo);
+    free(TareasPendientes);
+    free(TareasRealizadas);
 }
 
-// Liberar memoria
+Tarea BuscarTarea(Tarea tarea[],int cant)
+{
+    int id;
 
-// for (int i = 0; i < cant; i++)
-// {
-//     free(arreglo[i]);
-// }
+    puts("\n\nBUSCAR TAREA \n");
+    printf("Ingrese el ID: ");
+    scanf("%d",&id);
+
+    for (int i = 0; i < cant; i++)
+    {
+        if (tarea[i].TareaID == id)
+        {
+            printf("\nTAREA %d\n", tarea[i].TareaID);
+            printf("Descripcion: %s", tarea[i].Descripcion);
+            printf("\nDuracion: %d", tarea[i].Duracion);
+        }
+    }
+    
+}
