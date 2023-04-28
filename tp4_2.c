@@ -10,7 +10,8 @@ struct
 } typedef Tarea;
 
 void ToDo();
-Tarea BuscarTarea(Tarea tarea[], int cant);
+Tarea BuscarTareaPorId(Tarea tarea[], int cant);
+Tarea BuscarTareaPorPalabra(Tarea tarea[], int cant);
 
 int main()
 {
@@ -98,7 +99,9 @@ void ToDo()
 
     // Buscar Tarea
 
-    BuscarTarea(*arreglo, cant);
+    BuscarTareaPorId(*arreglo,cant);
+
+    BuscarTareaPorPalabra(*arreglo,cant);
 
     // Liberar memoria
 
@@ -113,7 +116,27 @@ void ToDo()
     free(TareasRealizadas);
 }
 
-Tarea BuscarTarea(Tarea tarea[],int cant)
+Tarea BuscarTareaPorId(Tarea tarea[],int cant)
+{
+    int id;
+
+    puts("\n\nBUSCAR TAREA \n");
+    printf("Ingrese el ID: ");
+    scanf("%d",&id);
+
+    for (int i = 0; i < cant; i++)
+    {
+        if (tarea[i].TareaID == id)
+        {
+            printf("\nTAREA %d\n", tarea[i].TareaID);
+            printf("Descripcion: %s", tarea[i].Descripcion);
+            printf("\nDuracion: %d", tarea[i].Duracion);
+        }
+    }
+    
+}
+
+Tarea BuscarTareaPorPalabra(Tarea tarea[],int cant)
 {
     char palabra[20];
 
