@@ -99,9 +99,26 @@ void ToDo()
 
     // Buscar Tarea
 
-    BuscarTareaPorId(*arreglo,cant);
+    int opcion;
 
-    BuscarTareaPorPalabra(*arreglo,cant);
+    puts("\n\nBUSCAR TAREA\n");
+    puts("1. Por Id");
+    puts("2. Por Palabra");
+    scanf("%d", &opcion);
+
+    switch (opcion)
+    {
+    case 1:
+        BuscarTareaPorId(*arreglo, cant);
+        break;
+    case 2:
+        BuscarTareaPorPalabra(*arreglo, cant);
+        break;
+
+    default:
+        puts("\nOpcion incorrecta\n");
+        break;
+    }
 
     // Liberar memoria
 
@@ -116,13 +133,13 @@ void ToDo()
     free(TareasRealizadas);
 }
 
-Tarea BuscarTareaPorId(Tarea tarea[],int cant)
+Tarea BuscarTareaPorId(Tarea tarea[], int cant)
 {
     int id;
 
     puts("\n\nBUSCAR TAREA \n");
     printf("Ingrese el ID: ");
-    scanf("%d",&id);
+    scanf("%d", &id);
 
     for (int i = 0; i < cant; i++)
     {
@@ -132,30 +149,32 @@ Tarea BuscarTareaPorId(Tarea tarea[],int cant)
             printf("Descripcion: %s", tarea[i].Descripcion);
             printf("\nDuracion: %d", tarea[i].Duracion);
         }
+        else
+        {
+            puts("\nNo se encuentra la tarea");
+        }
     }
-    
 }
 
-Tarea BuscarTareaPorPalabra(Tarea tarea[],int cant)
+Tarea BuscarTareaPorPalabra(Tarea tarea[], int cant)
 {
     char palabra[20];
 
     puts("\n\nBUSCAR TAREA POR PALABRA \n");
     printf("Ingrese la palabra: ");
-    scanf("%s",palabra);
+    scanf("%s", palabra);
 
     for (int i = 0; i < cant; i++)
     {
-        if (strstr(tarea[i].Descripcion,palabra) != NULL)
+        if (strstr(tarea[i].Descripcion, palabra) != NULL)
         {
             printf("\nTAREA %d\n", tarea[i].TareaID);
             printf("Descripcion: %s", tarea[i].Descripcion);
             printf("\nDuracion: %d", tarea[i].Duracion);
-        } else
+        }
+        else
         {
             puts("\nNo se encuentra la tarea");
         }
-        
     }
-    
 }
