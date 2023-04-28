@@ -26,10 +26,10 @@ void ToDo()
     scanf("%d", &cant);
 
     Tarea **arreglo = (Tarea **)malloc(sizeof(Tarea *) * cant);
-    Tarea **TareasPendientes = arreglo;
-    Tarea **TareasRealizadas = arreglo;
+    Tarea **TareasPendientes = (Tarea **)malloc(sizeof(Tarea *) * cant);
+    Tarea **TareasRealizadas = (Tarea **)malloc(sizeof(Tarea *) * cant);
 
-    for (int i = 1; i <= cant; i++)
+    for (int i = 0; i < cant; i++)
     {
         arreglo[i] = malloc(sizeof(Tarea));
 
@@ -38,7 +38,7 @@ void ToDo()
 
         char cadena[50];
         puts("Ingrese la descripcion:");
-        scanf("%s", &cadena);
+        scanf("%s", cadena);
 
         arreglo[i]->Descripcion = malloc(sizeof(char) * (strlen(cadena) + 1));
 
@@ -49,56 +49,54 @@ void ToDo()
     }
 
     puts("\n-LISTA DE TAREAS-\n");
+    int k = 0;
 
-    for (int i = 1; i <= cant; i++)
+    for (int i = 0; i < cant; i++)
     {
-        
+
         TareasPendientes[i] = arreglo[i];
 
         printf("\nTAREA %d\n", arreglo[i]->TareaID);
         printf("Descripcion:");
         puts(arreglo[i]->Descripcion);
         printf("Duracion: %d", arreglo[i]->Duracion);
-        printf("\nSe realizo la tarea %d?  1.SI 0.NO:  ", arreglo[i]->TareaID);
+        printf("\nSe realizo la tarea %d?  1.SI 2.NO:  ", arreglo[i]->TareaID);
         scanf("%d", &realizada);
 
-        for (int j = 1; j <= cant; j++)
+        if (realizada == 1)
         {
-            if (realizada == 1)
-            {
-
-                TareasRealizadas[j] = TareasPendientes[i];
-                TareasPendientes[i] = NULL;
-            } else
-            {
-                TareasRealizadas[j] = NULL;
-            }
-            
+            TareasRealizadas[k] = TareasPendientes[i];
+            TareasPendientes[i] = NULL;
+            k++;
         }
     }
 
     puts("\n\nTAREAS REALIZADAS\n");
 
-    for (int i = 1; i <= cant; i++)
+    for (int i = 0; i < k; i++)
     {
-
-        printf("\nTAREA %d\n", TareasRealizadas[i]->TareaID);
-        printf("Descripcion: %s", TareasRealizadas[i]->Descripcion);
-        printf("\nDuracion: %d", TareasRealizadas[i]->Duracion);
+        if (TareasRealizadas[i] != NULL)
+        {
+            printf("\nTAREA %d\n", TareasRealizadas[i]->TareaID);
+            printf("Descripcion: %s", TareasRealizadas[i]->Descripcion);
+            printf("\nDuracion: %d", TareasRealizadas[i]->Duracion);
+        }
     }
 
     puts("\n\nTAREAS PENDIENTES\n");
 
-    for (int i = 1; i <= cant; i++)
+    for (int i = 0; i < cant; i++)
     {
-
-        printf("\nTAREA %d\n", TareasPendientes[i]->TareaID);
-        printf("Descripcion: %s", TareasPendientes[i]->Descripcion);
-        printf("\nDuracion: %d", TareasPendientes[i]->Duracion);
+        if (TareasPendientes[i] != NULL)
+        {
+            printf("\nTAREA %d\n", TareasPendientes[i]->TareaID);
+            printf("Descripcion: %s", TareasPendientes[i]->Descripcion);
+            printf("\nDuracion: %d", TareasPendientes[i]->Duracion);
+        }
     }
 }
 
-// al final
+// Liberar memoria
 
 // for (int i = 0; i < cant; i++)
 // {
