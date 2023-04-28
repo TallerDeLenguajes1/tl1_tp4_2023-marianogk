@@ -10,8 +10,7 @@ struct
 } typedef Tarea;
 
 void ToDo();
-Tarea BuscarTareaPorId(Tarea tarea[], int cant);
-Tarea BuscarTareaPorPalabra(Tarea tarea[], int cant);
+Tarea BuscarTarea(Tarea tarea[], int cant);
 
 int main()
 {
@@ -73,35 +72,33 @@ void ToDo()
         }
     }
 
-    // puts("\n\nTAREAS REALIZADAS\n");
+    puts("\n\nTAREAS REALIZADAS\n");
 
-    // for (int i = 0; i < k; i++)
-    // {
-    //     if (TareasRealizadas[i] != NULL)
-    //     {
-    //         printf("\nTAREA %d\n", TareasRealizadas[i]->TareaID);
-    //         printf("Descripcion: %s", TareasRealizadas[i]->Descripcion);
-    //         printf("\nDuracion: %d", TareasRealizadas[i]->Duracion);
-    //     }
-    // }
+    for (int i = 0; i < k; i++)
+    {
+        if (TareasRealizadas[i] != NULL)
+        {
+            printf("\nTAREA %d\n", TareasRealizadas[i]->TareaID);
+            printf("Descripcion: %s", TareasRealizadas[i]->Descripcion);
+            printf("\nDuracion: %d", TareasRealizadas[i]->Duracion);
+        }
+    }
 
-    // puts("\n\nTAREAS PENDIENTES\n");
+    puts("\n\nTAREAS PENDIENTES\n");
 
-    // for (int i = 0; i < cant; i++)
-    // {
-    //     if (TareasPendientes[i] != NULL)
-    //     {
-    //         printf("\nTAREA %d\n", TareasPendientes[i]->TareaID);
-    //         printf("Descripcion: %s", TareasPendientes[i]->Descripcion);
-    //         printf("\nDuracion: %d", TareasPendientes[i]->Duracion);
-    //     }
-    // }
+    for (int i = 0; i < cant; i++)
+    {
+        if (TareasPendientes[i] != NULL)
+        {
+            printf("\nTAREA %d\n", TareasPendientes[i]->TareaID);
+            printf("Descripcion: %s", TareasPendientes[i]->Descripcion);
+            printf("\nDuracion: %d", TareasPendientes[i]->Duracion);
+        }
+    }
 
     // Buscar Tarea
 
-    // BuscarTareaPorId(*arreglo,cant);
-
-    BuscarTareaPorPalabra(*arreglo,cant);
+    BuscarTarea(*arreglo,cant);
 
     // Liberar memoria
 
@@ -116,11 +113,11 @@ void ToDo()
     free(TareasRealizadas);
 }
 
-Tarea BuscarTareaPorId(Tarea tarea[],int cant)
+Tarea BuscarTarea(Tarea tarea[],int cant)
 {
     int id;
 
-    puts("\n\nBUSCAR TAREA POR ID\n");
+    puts("\n\nBUSCAR TAREA \n");
     printf("Ingrese el ID: ");
     scanf("%d",&id);
 
@@ -136,26 +133,22 @@ Tarea BuscarTareaPorId(Tarea tarea[],int cant)
     
 }
 
-Tarea BuscarTareaPorPalabra(Tarea tarea[],int cant)
+Tarea BuscarTarea(Tarea tarea[],int cant)
 {
-    char palabra[20];
+    int id;
 
-    puts("\n\nBUSCAR TAREA POR PALABRA \n");
-    printf("Ingrese la palabra: ");
-    scanf("%s",palabra);
+    puts("\n\nBUSCAR TAREA \n");
+    printf("Ingrese el ID: ");
+    scanf("%d",&id);
 
     for (int i = 0; i < cant; i++)
     {
-        if (strstr(tarea[i].Descripcion,palabra) != NULL)
+        if (tarea[i].TareaID == id)
         {
             printf("\nTAREA %d\n", tarea[i].TareaID);
             printf("Descripcion: %s", tarea[i].Descripcion);
             printf("\nDuracion: %d", tarea[i].Duracion);
-        } else
-        {
-            puts("\nNo se encuentra la tarea");
         }
-        
     }
     
 }
