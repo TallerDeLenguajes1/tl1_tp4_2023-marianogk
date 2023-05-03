@@ -63,24 +63,23 @@ void ToDo()
 
     // Preguntar si se realizo la tarea
 
-    Nodo *actual;
+    Lista auxP = TareasPendientes;
 
-    while (TareasPendientes)
+    while (auxP)
     {
-        actual= TareasPendientes;
-        printf("\nSe realizo la tarea %d?  1.SI 2.NO:  ", TareasPendientes->T.TareaID);
+
+        printf("\nSe realizo la tarea %d?  1.SI 2.NO:  ", auxP->T.TareaID);
         scanf("%d", &realizada);
 
         if (realizada == 1)
         {
 
-            InsertarNodo(&TareasRealizadas, TareasPendientes->T);
+            InsertarNodo(&TareasRealizadas, auxP->T);
 
-            EliminarNodo(&TareasPendientes, actual->T.TareaID);
-            // TareasPendientes->siguiente = NULL;
-        } 
-        
-        TareasPendientes = TareasPendientes->siguiente;
+            // EliminarNodo(&TareasPendientes, auxP->T.TareaID);
+        }
+
+        auxP = auxP->siguiente;
     }
 
     puts("\n\nTAREAS REALIZADAS\n");
@@ -89,7 +88,7 @@ void ToDo()
 
     puts("\n\nTAREAS PENDIENTES\n");
 
-    // mostrarTareas(TareasPendientes);
+    mostrarTareas(TareasPendientes);
 
     // Buscar Tarea
 
