@@ -2,31 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct
+typedef struct Tarea
 {
     int TareaID; // Numerado en ciclo iterativo
     char *Descripcion;
     int Duracion; // entre 10 – 100
 } Tarea;
 
-typedef struct
+typedef struct Nodo
 {
     Tarea T;
     struct Nodo *siguiente;
 } Nodo;
 
-typedef Nodo *Lista;
-
 void ToDo();
-void AgregarTarea(Lista *L);
-Lista CrearListaVacia();
+void AgregarTarea(Nodo **L);
+Nodo *CrearListaVacia();
 Nodo *CrearNodo(Tarea tarea);
-void InsertarNodo(Lista *L, Tarea tarea);
-void mostrarTareas(Lista L);
-void EliminarNodo(Lista *L, int id);
+void InsertarNodo(Nodo **L, Tarea tarea);
+void mostrarTareas(Nodo *L);
+void EliminarNodo(Nodo **nodo, int id);
 void LiberarNodo(Nodo *nodo);
 Nodo *BuscarTareaPorId(Nodo *tareas, int id);
 Nodo *BuscarTareaPorPalabra(Nodo *tareas, char *palabra);
+void LiberarLista(Nodo *L);
+void EliminarTarea(Tarea t, int id);
+void MostrarDatos(Nodo *L);
 
 int main()
 {
@@ -38,111 +39,101 @@ int main()
 void ToDo()
 {
     int realizada;
-    Lista L, TareasPendientes, TareasRealizadas;
+    Nodo *TareasEnProceso, *TareasPendientes, *TareasRealizadas, *tarea;
 
-    L = CrearListaVacia();
+    int opcion = 1, id, opTarea;
+    char palabra[20];
+
+    TareasEnProceso = CrearListaVacia();
     TareasPendientes = CrearListaVacia();
     TareasRealizadas = CrearListaVacia();
 
-    AgregarTarea(&L);
+    AgregarTarea(&TareasEnProceso);
 
-    puts("\n-LISTA DE TAREAS-\n");
+    // puts("\n-LISTA DE TAREAS-\n");
 
-    mostrarTareas(L);
+    puts("\n\nTAREAS EN PROCESO\n");
 
-    // Pasar todas las tareas a pendientes
-
-    Lista auxL = L;
-
-    while (auxL)
-    {
-
-        InsertarNodo(&TareasPendientes, auxL->T);
-        auxL = auxL->siguiente;
-    }
-
-    // Preguntar si se realizo la tarea
-
-    Lista auxP = TareasPendientes;
-    Nodo *actual;
-
-    while (auxP)
-    {
-        actual= auxP;
-        printf("\nSe realizo la tarea %d?  1.SI 2.NO:  ", auxP->T.TareaID);
-        scanf("%d", &realizada);
-
-        if (realizada == 1)
-        {
-
-            InsertarNodo(&TareasRealizadas, auxP->T);
-
-            EliminarNodo(&TareasPendientes, actual->T.TareaID);
-            // TareasPendientes->siguiente = NULL;
-        } 
-        auxP = actual->siguiente;
-    }
-
-    puts("\n\nTAREAS REALIZADAS\n");
-
-    mostrarTareas(TareasRealizadas);
+    mostrarTareas(TareasEnProceso);
+    MostrarDatos(TareasEnProceso);
 
     puts("\n\nTAREAS PENDIENTES\n");
 
     mostrarTareas(TareasPendientes);
+    MostrarDatos(TareasPendientes);
 
-    // Buscar Tarea
+    puts("\n\nTAREAS REALIZADAS\n");
 
-    // int opcion;
-    // int id;
-    // char palabra[20];
+    mostrarTareas(TareasRealizadas);
+    MostrarDatos(TareasRealizadas);
 
-    // puts("\n\nBUSCAR TAREA\n");
-    // puts("1. Por Id");
-    // puts("2. Por Palabra");
-    // scanf("%d", &opcion);
+    do
+    {
+        // Buscar Tarea
 
-    // switch (opcion)
-    // {
-    // case 1:
+        puts("\n\nBUSCAR TAREA \n");
+        printf("Ingrese el ID: ");
+        scanf("%d", &id);
+        tarea = BuscarTareaPorId(TareasEnProceso, id);
+        if (tarea)
+        {
+            puts("Seleccione una opcion:\n");
+            printf("1. Mover tarea a Pendientes\n");
+            printf("2. Mover tarea a Realizadas\n");
+            printf("3. Eliminar tarea\n");
+            printf("4. No hacer nada\n");
+            scanf("%d", &opTarea);
+            switch (opTarea)
+            {
+            case 1:
+                InsertarNodo(&TareasPendientes, tarea->T);
+                EliminarNodo(&TareasRealizadas, id);
+                break;
+            case 2:
+                InsertarNodo(&TareasRealizadas, tarea->T);
+                EliminarNodo(&TareasPendientes, id);
+                break;
+            case 3:
+                EliminarNodo(&TareasEnProceso, id);
+                EliminarNodo(&TareasPendientes, id);
+                EliminarNodo(&TareasRealizadas, id);
+                tarea = NULL;
+                break;
+            default:
+                break;
+            }
+        }
+        else
+        {
+            puts("\nNo se encuentra la tarea");
+        }
 
-    //     puts("\n\nBUSCAR TAREA \n");
-    //     printf("Ingrese el ID: ");
-    //     scanf("%d", &id);
-    //     BuscarTareaPorId(L, id);
-    //     break;
-    // case 2:
+        printf("Desea modificar otra tarea? 1. Si | 2. No: ");
+        scanf("%d", &opcion);
 
-    //     puts("\n\nBUSCAR TAREA POR PALABRA \n");
-    //     printf("Ingrese la palabra: ");
-    //     scanf("%s", palabra);
-    //     BuscarTareaPorPalabra(L, palabra);
-    //     break;
+        puts("\n\nTAREAS EN PROCESO\n");
 
-    // default:
-    //     puts("\nOpcion incorrecta\n");
-    //     break;
-    // }
+        mostrarTareas(TareasEnProceso);
+
+        puts("\n\nTAREAS PENDIENTES\n");
+
+        mostrarTareas(TareasPendientes);
+
+        puts("\n\nTAREAS REALIZADAS\n");
+
+        mostrarTareas(TareasRealizadas);
+
+    } while (opcion == 1);
 
     // Liberar memoria
 
-    // while (L || nodoPendientes || nodoRealizadas)
-    // {
-    //     LiberarNodo(L);
-    //     LiberarNodo(nodoPendientes);
-    //     LiberarNodo(nodoRealizadas);
-    // }
-    // free(nueva);
-    // free(TareasPendientes);
-    // free(TareasRealizadas);
-
-    //     aux = listaPendiente
-    // listaPendiente = listaPendiente-> siguiente
-    // free(aux->tarea.descripcion)
-    // free(aux)
+    LiberarLista(TareasEnProceso);
+    LiberarLista(TareasPendientes);
+    LiberarLista(TareasRealizadas);
+    LiberarNodo(tarea);
 }
 
-Lista CrearListaVacia()
+Nodo *CrearListaVacia()
 {
     return NULL;
 }
@@ -155,15 +146,14 @@ Nodo *CrearNodo(Tarea tarea)
     return nuevo;
 }
 
-void InsertarNodo(Lista *L, Tarea tarea)
+void InsertarNodo(Nodo **L, Tarea tarea)
 {
     Nodo *nuevo = CrearNodo(tarea);
-    Nodo *Aux = *L;
-    nuevo->siguiente = Aux;
+    nuevo->siguiente = *L;
     *L = nuevo;
 }
 
-void AgregarTarea(Lista *L)
+void AgregarTarea(Nodo **L)
 {
     int add = 0, i = 0;
 
@@ -180,7 +170,7 @@ void AgregarTarea(Lista *L)
 
         char cadena[50];
         puts("Ingrese la descripcion:");
-        scanf("%s", cadena);
+        scanf("%s", &cadena);
 
         nueva.Descripcion = malloc(sizeof(char) * (strlen(cadena) + 1));
 
@@ -198,7 +188,7 @@ void AgregarTarea(Lista *L)
     }
 }
 
-void mostrarTareas(Lista L)
+void mostrarTareas(Nodo *L)
 {
     Nodo *aux = L;
     while (aux != NULL)
@@ -211,12 +201,12 @@ void mostrarTareas(Lista L)
     }
 }
 
-void EliminarNodo(Lista *L, int id)
+void EliminarNodo(Nodo **nodo, int id)
 {
     int DatoBuscado = id;
 
-    Nodo *Aux = L;
-    Nodo *AuxAnterior = L;
+    Nodo *Aux = *nodo;
+    Nodo *AuxAnterior = *nodo;
     while (Aux && Aux->T.TareaID != DatoBuscado)
     {
         AuxAnterior = Aux;
@@ -224,14 +214,22 @@ void EliminarNodo(Lista *L, int id)
     }
     if (Aux)
     {
-        AuxAnterior->siguiente = Aux->siguiente;
-        free(Aux);
+        if (Aux == *nodo)
+        {
+            *nodo = Aux->siguiente;
+        }
+        else
+        {
+            AuxAnterior->siguiente = Aux->siguiente;
+        }
+
+        LiberarNodo(Aux);
     }
 }
 
 void LiberarNodo(Nodo *nodo)
 {
-    if (!nodo)
+    if (nodo)
     {
         free(nodo);
     }
@@ -245,16 +243,13 @@ Nodo *BuscarTareaPorId(Nodo *tareas, int id)
 
         if (tareas->T.TareaID == id)
         {
-            printf("\nTAREA %d\n", tareas->T.TareaID);
-            printf("Descripcion: %s", tareas->T.Descripcion);
-            printf("\nDuracion: %d", tareas->T.Duracion);
+
             return tareas;
         }
-        else
-        {
-            puts("\nNo se encuentra la tarea");
-        }
+        tareas = tareas->siguiente;
     }
+
+    return NULL;
 }
 
 Nodo *BuscarTareaPorPalabra(Nodo *tareas, char *palabra)
@@ -264,14 +259,38 @@ Nodo *BuscarTareaPorPalabra(Nodo *tareas, char *palabra)
     {
         if (strstr(tareas->T.Descripcion, palabra) != NULL)
         {
-            printf("\nTAREA %d\n", tareas->T.TareaID);
-            printf("Descripcion: %s", tareas->T.Descripcion);
-            printf("\nDuracion: %d", tareas->T.Duracion);
             return tareas;
         }
-        else
-        {
-            puts("\nNo se encuentra la tarea");
-        }
+        tareas = tareas->siguiente;
     }
+
+    return NULL;
+}
+
+void LiberarLista(Nodo *L)
+{
+    Nodo *actual = L;
+    Nodo *siguiente;
+
+    while (actual)
+    {
+        siguiente = actual->siguiente;
+        free(actual->T.Descripcion);
+        free(actual);
+        actual = siguiente;
+    }
+}
+
+void MostrarDatos(Nodo *L)
+{
+    Nodo *Aux = L;
+    int cantidad = 0, duracion = 0;
+    while (Aux)
+    {
+        cantidad++;
+        duracion += Aux->T.Duracion;
+        Aux = Aux->siguiente;
+    }
+    printf("\n\nCantidad de tareas: %d\n", cantidad);
+    printf("\nDuracion total: %d", duracion);
 }
